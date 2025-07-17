@@ -1,0 +1,14 @@
+server/
+*.py
+__pycache__/
+*.pyc
+.env
+.env.*
+*.db
+*.log
+docs/
+test*
+README.md
+docker-compose.yml
+list_models.py
+test_gemini.py
