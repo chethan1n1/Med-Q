@@ -5,11 +5,12 @@
   "installCommand": "cd client && npm install",
   "devCommand": "cd client && npm run dev",
   "framework": "vite",
-  "functions": {
-    "api/*.py": {
-      "runtime": "python3.9"
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
