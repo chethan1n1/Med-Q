@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Patient, MedicalSummary, IntakeData, APIResponse, DoctorUser, TextProcessResponse, VoiceTranscriptResponse, MedicalSummaryResponse } from '../types';
+import { Patient, MedicalSummary, IntakeData, APIResponse, DoctorUser, TextProcessResponse } from '../types';
 
 const API_BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:8000' 
