@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: medq_postgres
+    environment:
+      POSTGRES_DB: medq_db
+      POSTGRES_USER: medq_user
+      POSTGRES_PASSWORD: medq_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - medq_network
+
+  # FastAPI Backend
+  backend:
+    build: ./server
+    container_name: medq_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://medq_user:medq_password@db:5432/medq_db
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
+    networks:
+      - medq_network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # React Frontend
+  frontend:
+    build: ./client
+    container_name: medq_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://localhost:8000
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - medq_network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+
+networks:
+  medq_network:
+    driver: bridge

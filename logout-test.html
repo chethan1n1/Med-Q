@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Logout Test</title>
+</head>
+<body>
+    <h1>Quick Logout Test</h1>
+    <p>Open browser console to see logs</p>
+    
+    <button onclick="quickLogout()">Quick Logout Test</button>
+    
+    <script>
+        function quickLogout() {
+            console.log('Quick logout started');
+            
+            // Simulate setting login data
+            localStorage.setItem('medq_token', 'test-token');
+            localStorage.setItem('medq_user', '{"username": "admin"}');
+            console.log('Test data set');
+            
+            // Clear localStorage
+            localStorage.removeItem('medq_token');
+            localStorage.removeItem('medq_user');
+            localStorage.removeItem('medq_username');
+            localStorage.removeItem('medq_remember');
+            console.log('LocalStorage cleared');
+            
+            // Check if cleared
+            console.log('Token after clear:', localStorage.getItem('medq_token'));
+            
+            // Navigate (simulate)
+            console.log('Would navigate to /login');
+            alert('Logout test completed - check console');
+        }
+    </script>
+</body>
+</html>

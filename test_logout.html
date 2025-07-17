@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Logout</title>
+</head>
+<body>
+    <h1>Test Logout Functionality</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testLogout()">Test Logout</button>
+    <div id="result"></div>
+    
+    <script>
+        const authUtils = {
+            getToken: () => localStorage.getItem('medq_token'),
+            getUser: () => {
+                const userStr = localStorage.getItem('medq_user');
+                return userStr ? JSON.parse(userStr) : null;
+            },
+            isAuthenticated: () => {
+                const token = authUtils.getToken();
+                if (!token) return false;
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const currentTime = Date.now() / 1000;
+                    return payload.exp > currentTime;
+                } catch (error) {
+                    return false;
+                }
+            },
+            getAuthHeader: () => {
+                const token = authUtils.getToken();
+                return token ? { Authorization: `Bearer ${token}` } : {};
+            }
+        };
+
+        async function testLogin() {
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('medq_token', data.data.token);
+                    localStorage.setItem('medq_user', JSON.stringify(data.data.user));
+                    document.getElementById('result').innerHTML = '<p style="color: green;">Login successful!</p>';
+                } else {
+                    document.getElementById('result').innerHTML = '<p style="color: red;">Login failed!</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function testLogout() {
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...authUtils.getAuthHeader()
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.removeItem('medq_token');
+                    localStorage.removeItem('medq_user');
+                    localStorage.removeItem('medq_username');
+                    localStorage.removeItem('medq_remember');
+                    document.getElementById('result').innerHTML = '<p style="color: green;">Logout successful!</p>';
+                } else {
+                    document.getElementById('result').innerHTML = '<p style="color: red;">Logout failed!</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
