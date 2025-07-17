@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Patient, MedicalSummary, IntakeData, APIResponse, DoctorUser } from '../types';
+import { Patient, MedicalSummary, IntakeData, APIResponse, DoctorUser, TextProcessResponse, VoiceTranscriptResponse, MedicalSummaryResponse } from '../types';
 
 const API_BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:8000' 
@@ -48,11 +48,7 @@ export const intakeService = {
   },
 
   // Process text input and extract data
-  async processText(message: string, currentData: IntakeData): Promise<APIResponse<{
-    response: string;
-    extracted_data: Partial<IntakeData>;
-    next_step: string;
-  }>> {
+  async processText(message: string, currentData: IntakeData): Promise<APIResponse<TextProcessResponse>> {
     const response = await api.post('/api/intake/text', {
       message,
       current_data: currentData,

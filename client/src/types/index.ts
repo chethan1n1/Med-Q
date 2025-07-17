@@ -87,3 +87,19 @@ export interface APIResponse<T> {
   message?: string;
   error?: string;
 }
+
+export interface TextProcessResponse {
+  response: string;
+  extracted_data: Partial<IntakeData>;
+  next_step: string;
+  is_emergency?: boolean;
+}
+
+export interface VoiceTranscriptResponse {
+  transcript: string;
+}
+
+export interface MedicalSummaryResponse {
+  summary_text: string;
+  structured_data: any;
+}
