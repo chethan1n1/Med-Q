@@ -4,5 +4,16 @@
   "outputDirectory": "client/dist",
   "installCommand": "cd client && npm install",
   "devCommand": "cd client && npm run dev",
-  "framework": "vite"
+  "framework": "vite",
+  "functions": {
+    "api/*.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    }
+  ]
 }
